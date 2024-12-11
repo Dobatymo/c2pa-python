@@ -200,23 +200,19 @@ def create_signer(callback, alg, certs, timestamp_url=None):
 # seems we need to manually coerce the enum types,
 # like unffi itself does too
 def convert_to_alg(alg):
-    match str(alg):
-        case "SigningAlg.ES256":
-            return api.SigningAlg.ES256
-        case "SigningAlg.ES384":
-            return api.SigningAlg.ES384
-        case "SigningAlg.ES512":
-            return api.SigningAlg.ES512
-        case "SigningAlg.PS256":
-            return api.SigningAlg.PS256
-        case "SigningAlg.PS384":
-            return api.SigningAlg.PS384
-        case "SigningAlg.PS512":
-            return api.SigningAlg.PS512
-        case "SigningAlg.ED25519":
-            return api.SigningAlg.ED25519
-        case _:
-            raise ValueError("Unsupported signing algorithm: " + str(alg))
+    d = {
+        "SigningAlg.ES256": api.SigningAlg.ES256,
+        "SigningAlg.ES384": api.SigningAlg.ES384,
+        "SigningAlg.ES512": api.SigningAlg.ES512,
+        "SigningAlg.PS256": api.SigningAlg.PS256,
+        "SigningAlg.PS384": api.SigningAlg.PS384,
+        "SigningAlg.PS512": api.SigningAlg.PS512,
+        "SigningAlg.ED25519": api.SigningAlg.ED25519,
+    }
+    out = d.get(str(alg))
+    if out is None:
+        raise ValueError("Unsupported signing algorithm: " + str(alg))
+    return out
 
 # Creates a special case signer that uses direct COSE handling
 # The callback signer should also define the signing algorithm to use
